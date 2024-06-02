@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
 const editBlog = async (title: string | undefined, description: string | undefined, id: number) => {
-  const res = await fetch(`http://localhost:3000/api/blog${id}`, {
+  const res = await fetch(`http://localhost:3000/api/blog/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +20,18 @@ const getBlogById = async (id: number) => {
   const res = await fetch(`http://localhost:3000/api/blog/${id}`);
   const data = await res.json();
   console.log(data); //このdataはちゃんと受け取れている
-  return data.post;
+  return data;
+};
+
+const deleteBlog = async (id: number) => {
+  const res = await fetch(`http://localhost:3000/api/blog/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return (await res).json();
 };
 
 const EditPost = ({ params }: { params: { id: number } }) => {
@@ -38,14 +49,22 @@ const EditPost = ({ params }: { params: { id: number } }) => {
     router.refresh();
   };
 
+  const handleDelete = async () => {
+    toast.loading("削除中です...");
+    await deleteBlog(params.id);
+
+    router.push("/");
+    router.refresh();
+  };
+
   useEffect(() => {
     getBlogById(params.id)
       .then((data) => {
         console.log(data); //このdataはundefinedになる
 
         if (titleRef.current && descriptionRef.current) {
-          titleRef.current.value = data.title;
-          descriptionRef.current.value = data.description;
+          titleRef.current.value = data.posts.title;
+          descriptionRef.current.value = data.posts.description;
         }
       })
       .catch((err) => {
@@ -74,7 +93,10 @@ const EditPost = ({ params }: { params: { id: number } }) => {
             <button className="font-semibold px-4 py-2 shadow-xl bg-slate-200 rounded-lg m-auto hover:bg-slate-100">
               更新
             </button>
-            <button className="ml-2 font-semibold px-4 py-2 shadow-xl bg-red-400 rounded-lg m-auto hover:bg-slate-100">
+            <button
+              onClick={handleDelete}
+              className="ml-2 font-semibold px-4 py-2 shadow-xl bg-red-400 rounded-lg m-auto hover:bg-slate-100"
+            >
               削除
             </button>
           </form>
