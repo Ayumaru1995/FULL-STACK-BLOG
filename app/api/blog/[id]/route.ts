@@ -3,7 +3,7 @@ import { main } from "../route";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-//あああああああああああああ
+
 //ブログの詳細記事取得API
 export const GET = async (req: Request , res: NextResponse) => {
     try {
