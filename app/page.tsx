@@ -15,8 +15,7 @@ async function fetchAllBlogs(){
 
 export default async function Home() {
 
-const posts = await fetchAllBlogs(); //関数内でawaitがあるのにこっちにもawaitが必要？？
-console.log(posts);
+const posts = await fetchAllBlogs();
 
   return (
     <main className="w-full h-full">
