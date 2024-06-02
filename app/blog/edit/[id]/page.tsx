@@ -19,7 +19,7 @@ const editBlog = async (title: string | undefined, description: string | undefin
 const getBlogById = async (id: number) => {
   const res = await fetch(`http://localhost:3000/api/blog/${id}`);
   const data = await res.json();
-  console.log(data);
+  console.log(data); //このdataはちゃんと受け取れている
   return data.post;
 };
 
@@ -41,7 +41,7 @@ const EditPost = ({ params }: { params: { id: number } }) => {
   useEffect(() => {
     getBlogById(params.id)
       .then((data) => {
-        console.log(data);
+        console.log(data); //このdataはundefinedになる
 
         if (titleRef.current && descriptionRef.current) {
           titleRef.current.value = data.title;
